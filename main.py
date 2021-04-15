@@ -3,8 +3,8 @@ import math
 
 
 def perumetr_kola(radius):
-    PI = 3.1415926535
-    per = 2 * radius * PI
+    PI = 3.1415926535  # ЭТО можно вынести в константу
+    per = 2 * radius * PI # а тут сразу написать return 2 * radius * PI
     return per
 
 
@@ -54,11 +54,11 @@ def zodiack_search(month_birth, day_birth):
     return 'Your birth data is wrong'
 
 
-def reverse_mas(mas1=None):
+def reverse_mas(mas1=None): # Непонятно что такое mas1
     if mas1 is None:
         mas1 = {}
     mas_copy = mas1.copy()
-    len_mas = len(mas1)-1
+    len_mas = len(mas1)-1 # не хватает пробелов len_mas = len(mas1) - 1
     for x in range(0, 9):
         mas1[x] = mas_copy[len_mas-x]
     return mas1
@@ -76,24 +76,24 @@ def my_database():
         print('if you wand delete record press 2')
         print('if you wand change record press 3')
         print('if you want exit press 4')
-        user_numb = input()
+        user_numb = input() # Сюда можно сразу написать int(input())
         if user_numb.isdigit() == False:
             continue
-        if int(user_numb) == 1:
+        if int(user_numb) == 1: # И избавиться от преведения типа тут и ниже
             print('write key of record:')
-            key = input()
+            key = input() # key, value - такое слова не используем, они зарезервированы системой
             print('write value for your key:')
             value = input()
             if key.isdigit() == True:
                 key = int(key)
             if value.isdigit() == True:
                 value = int(value)
-            user_dict.update({key: value})
+            user_dict.update({key: value}) # Ентера нет
         elif int(user_numb) == 2:
             print(user_dict)
             print('what number of record you want to delete?')
             del_key = input()
-            if del_key.isdigit() == False:
+            if del_key.isdigit() == False: # Можно просто if not del_key.isdigit()
                 print('This is not correct number!')
                 continue
             elif int(del_key) > len(user_dict) or int(del_key) <= 0:
@@ -120,7 +120,7 @@ def my_database():
             print('your input false, please write true number!')
 
 
-def main():
+def main(): # Ну прям красота :) 
     print(ploscha_kola(123))
     print(radius_in_ploscha(234))
     print(perumetr_kola(345))
