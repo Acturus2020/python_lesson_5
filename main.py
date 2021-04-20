@@ -95,10 +95,12 @@ def my_database():
             if not del_key.isdigit():
                 print('This is not correct number!')
                 continue
+
             elif int(del_key) > len(user_dict) or int(del_key) <= 0:
                 print('Your base doesnot have this number!')
                 continue
-            user_dict.pop(int(del_key) + 1)
+            print(del_key)
+            user_dict.pop(int(del_key) - 1)
 
         elif int(user_numb) == 3:
             print('What number of record you want to change?')
@@ -123,13 +125,14 @@ def my_database():
 
 
 def main():
-    print(ploscha_kola(123))
-    print(radius_in_ploscha(234))
-    print(perumetr_kola(345))
-    print(radius_in_per(456))
-    print(zodiack_search(2, 13))
-    print(reverse_mas([454, 656, 676, 878, 898, 1090, 1122, 1234, 1789]))
-    print_n_close()
+    # print(ploscha_kola(123))
+    # print(radius_in_ploscha(234))
+    # print(perumetr_kola(345))
+    # print(radius_in_per(456))
+    # print(zodiack_search(2, 13))
+    # print(reverse_mas([454, 656, 676, 878, 898, 1090, 1122, 1234, 1789]))
+    # print_n_close()
+    my_database()
 
 
 if __name__ == "__main__":
