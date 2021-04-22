@@ -32,7 +32,7 @@ MANUFACTURERS = [
     'Ferrari',
     'Fiat ',
     'Fisker',
-    'Ford ',
+    'Ford',
     'Geely ',
     'Genesis',
     'GMC ',
@@ -114,6 +114,8 @@ class Transport:
     number_of_wheels = 0
     number_of_transmission = 1
     is_cargo = False
+    is_passenger = False
+    best_transport = False
 
     def __init__(self, number_of_wheels=0, number_of_transmission=1):
         if not self._check_nember_of_wheels():
@@ -122,14 +124,14 @@ class Transport:
     def _check_nember_of_wheels(self):
         return self.number_of_wheels >= 0
 
-    def __set_name(self, name):
-        self.manufacturer_name = name
+    def __set_manufacturer(self, manufacturer):
+        self.manufacturer_name = manufacturer
 
-    def set_name(self, name):
-        if name in MANUFACTURERS:
-            self.__set_name(name)
+    def set_manufacturer(self, manufacturer):
+        if manufacturer in MANUFACTURERS:
+            self.__set_manufacturer(manufacturer)
 
-    def get_name(self):
+    def get_manufacturer(self):
         print(self.manufacturer_name)
 
 
@@ -137,14 +139,92 @@ class Truck(Transport):
     max_load_ton = 0
     has_trailer = False
 
-    def __init__(self, number_of_wheels=8, number_of_transmission=2, max_load_ton=7):
-        super().__init__(self, number_of_wheels, number_of_transmission)
+    def __init__(self, number_of_wheels=8, number_of_transmission=2, max_load_ton=7, is_cargo=True):
+        super().__init__(number_of_wheels, number_of_transmission)
+
+
+class Bus(Transport):
+    def __init__(self, number_of_wheels=6, is_passenger=True):
+        super().__init__(number_of_wheels)
+
+
+class MotoTransport(Transport):
+    def __init__(self, number_of_wheels=2):
+        super().__init__(number_of_wheels)
+
+
+class Car(Transport):
+    def __init__(self, number_of_wheels=4, is_passenger=True, is_cargo=False):
+        super().__init__(number_of_wheels)
 
 
 class TruckLessThan7Ton(Truck):
-    def __init__(self, number_of_wheels=8, number_of_transmission=2, max_load_ton=7):
-        super().__init__(self, number_of_wheels, number_of_transmission, max_load_ton)
+    def __init__(self, number_of_wheels=8, number_of_transmission=2, max_load_ton=7, is_cargo=True):
+        super().__init__(number_of_wheels, number_of_transmission, max_load_ton, is_cargo)
 
-# class TruckBiggerThan7Ton(Truck):
 
+class TruckBiggerThan7Ton(Truck):
+    def __init__(self, number_of_wheels=8, number_of_transmission=3, max_load_ton=10, is_cargo=True):
+        super().__init__(number_of_wheels, number_of_transmission, max_load_ton, is_cargo)
+
+
+class BusLessThan10People(Bus):
+    def __init__(self, number_of_wheels=6, is_passenger=True):
+        super().__init__(number_of_wheels, is_passenger)
+
+
+class BusForMoreThan10People(Bus):
+    def __init__(self, number_of_wheels=10, is_passenger=True):
+        super().__init__(number_of_wheels, is_passenger)
+
+
+class Motorcycle(MotoTransport):
+    def __init__(self, number_of_wheels=2, best_transport=True, is_passenger=True):
+        super().__init__(number_of_wheels)
+
+
+class Moped(MotoTransport):
+    def __init__(self, number_of_wheels=2):
+        super().__init__(number_of_wheels)
+
+
+class Sedan(Car):
+    def __init__(self, is_passenger=True):
+        super().__init__()
+
+
+class Miniven(Car):
+    def __init__(self, is_passenger=True):
+        super().__init__()
+
+
+class Coupe(Car):
+    def __init__(self, is_passenger=True):
+        super().__init__()
+
+
+class MuscleCar(Car):
+    def __init__(self, is_passenger=True):
+        super().__init__()
+
+
+class Universal(Car):
+    def __init__(self, is_passenger=True, is_cargo=True):
+        super().__init__(is_cargo)
+
+
+class Hatchback(Car):
+    def __init__(self, is_passenger=True):
+        super().__init__()
+
+
+class Cabriolet(Car):
+    def __init__(self, is_passenger=True):
+        super().__init__()
+
+
+def main():
+    Ford_musstang = MuscleCar()
+    Ford_musstang.set_manufacturer('Ford')
+    print(Ford_musstang.manufacturer_name)
 
