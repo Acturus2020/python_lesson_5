@@ -6,6 +6,7 @@ class Board:
     ship_y = 0
     ship_coord_x = []
     ship_coord_y = []
+    game_counter = 20
 
     count = True
 
@@ -28,8 +29,37 @@ class Board:
             print(row)
             y_num += 1
 
-    def make_bum(self, x, y):
-        self.rows[y-1][x-1] = '*'
+    def make_bum(self):
+        bom_x = 0
+        bom_y = 0
+        while True:
+            print('Please input boom coords x and y:')
+            bom_x = input('x')
+            bom_y = input('y')
+            if not bom_x.isdigit() or not bom_y.isdigit():
+                print('ERROR Your input false, please write number!')
+                continue
+            bom_x = int(bom_x) - 1
+            bom_y = int(bom_y) - 1
+            if not 0 <= bom_x < 10 and not 0 <= bom_y < 10:
+                print('Please write coordinate between 1 and 10!')
+                continue
+            if self.rows[bom_x][bom_y] == '*':
+                print('This cell was boomed in previously turn!')
+                continue
+            break
+        if self.rows[bom_x][bom_y] == '0':
+            print("You hit!")
+            self.game_counter -= 1
+            if 0 > bom_x - 1 or self.rows[bom_x-1][bom_y] != '0':
+                if 0 > bom_y - 1 or self.rows[bom_x][bom_y-1] != '0':
+                    if 9 < bom_x + 1 or self.rows[bom_x+1][bom_y] != '0':
+                        if 9 < bom_y + 1 or self.rows[bom_x][bom_y+1] != '0':
+                            print('You drown the ship!')
+        else:
+            print("You miss!")
+        self.rows[bom_x][bom_y] = '*'
+        self.print_board()
 
     def write_coord(self):
         while True:
@@ -41,7 +71,7 @@ class Board:
                 continue
             self.ship_x = int(self.ship_x) - 1
             self.ship_y = int(self.ship_y) - 1
-            if not 0 <= self.ship_x < 10 and not 0 <= self.ship_y < 10:
+            if not 0 <= self.ship_x < 10 or not 0 <= self.ship_y < 10:
                 print('Please write coordinate between 1 and 10!')
                 continue
             if not self.rows[self.ship_x][self.ship_y] == ' ':
@@ -139,6 +169,9 @@ def main():
     BoardUser.draw_ship(1)
     BoardUser.draw_ship(1)
     BoardUser.draw_ship(1)
+    while BoardUser.game_counter > 0:
+        BoardUser.make_bum()
+    raise SystemExit
 
 
 if __name__ == '__main__':
