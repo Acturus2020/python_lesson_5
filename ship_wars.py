@@ -59,52 +59,60 @@ class Board:
         self.ship_coord_y.append(self.ship_y)
         self.print_board()
         print('Choose rear of your', deck, '-deck ship:')
-        while True:
-            if self.ship_y - (deck-1) >= 0 and self.rows[self.ship_x][self.ship_y-(deck-1)] == ' ':
-                print('If you want', self.ship_x+1, ":", self.ship_y - (deck-2), 'coordinats for you ship, press 1, if no press 2')
-                input_choose_cord = input()
-                if int(input_choose_cord) == 1:
-                    for numb in range(1, deck):
-                        self.ship_coord_y.append(self.ship_y - numb)
-                        self.ship_coord_x.append(self.ship_x)
-                    break
-            if self.ship_y + (deck-1) < 10 and self.rows[self.ship_x][self.ship_y+(deck-1)] == ' ':
-                print('If you want', self.ship_x+1, ":", self.ship_y+deck, 'coordinats for you ship, press 1, if no press 2')
-                input_choose_cord = input()
-                if int(input_choose_cord) == 1:
-                    for numb in range(1, deck):
-                        self.ship_coord_y.append(self.ship_y + numb)
-                        self.ship_coord_x.append(self.ship_x)
-                    break
-            if self.ship_x - (deck-1) >= 0 and self.rows[self.ship_x-(deck-1)][self.ship_y] == ' ':
-                print('If you want', self.ship_x-(deck-2), ":", self.ship_y+1, 'coordinats for you ship, press 1, if no press 2')
-                input_choose_cord = input()
-                if int(input_choose_cord) == 1:
-                    for numb in range(1, deck):
-                        self.ship_coord_x.append(self.ship_x - numb)
-                        self.ship_coord_y.append(self.ship_y)
-                    break
-            if self.ship_x + (deck-1) < 10 and self.rows[self.ship_x+(deck-1)][self.ship_y] == ' ':
-                print('If you want', self.ship_x+deck, ":", self.ship_y+1, 'coordinats for you ship, press 1, if no press 2')
-                input_choose_cord = input()
-                if int(input_choose_cord) == 1:
-                    for numb in range(1, deck):
-                        self.ship_coord_x.append(self.ship_x + numb)
-                        self.ship_coord_y.append(self.ship_y)
-                    break
+        if 1 < deck < 5:
+            while True:
+                if self.ship_y - (deck-1) >= 0 and self.rows[self.ship_x][self.ship_y-(deck-1)] == ' ':
+                    print('If you want', self.ship_x+1, ":", self.ship_y - (deck-2), 'coordinats for you ship, press 1, if no press 2')
+                    input_choose_cord = input()
+                    if int(input_choose_cord) == 1:
+                        for numb in range(1, deck):
+                            self.ship_coord_y.append(self.ship_y - numb)
+                            self.ship_coord_x.append(self.ship_x)
+                        break
+                if self.ship_y + (deck-1) < 10 and self.rows[self.ship_x][self.ship_y+(deck-1)] == ' ':
+                    print('If you want', self.ship_x+1, ":", self.ship_y+deck, 'coordinats for you ship, press 1, if no press 2')
+                    input_choose_cord = input()
+                    if int(input_choose_cord) == 1:
+                        for numb in range(1, deck):
+                            self.ship_coord_y.append(self.ship_y + numb)
+                            self.ship_coord_x.append(self.ship_x)
+                        break
+                if self.ship_x - (deck-1) >= 0 and self.rows[self.ship_x-(deck-1)][self.ship_y] == ' ':
+                    print('If you want', self.ship_x-(deck-2), ":", self.ship_y+1, 'coordinats for you ship, press 1, if no press 2')
+                    input_choose_cord = input()
+                    if int(input_choose_cord) == 1:
+                        for numb in range(1, deck):
+                            self.ship_coord_x.append(self.ship_x - numb)
+                            self.ship_coord_y.append(self.ship_y)
+                        break
+                if self.ship_x + (deck-1) < 10 and self.rows[self.ship_x+(deck-1)][self.ship_y] == ' ':
+                    print('If you want', self.ship_x+deck, ":", self.ship_y+1, 'coordinats for you ship, press 1, if no press 2')
+                    input_choose_cord = input()
+                    if int(input_choose_cord) == 1:
+                        for numb in range(1, deck):
+                            self.ship_coord_x.append(self.ship_x + numb)
+                            self.ship_coord_y.append(self.ship_y)
+                        break
 
-        for numb_x in range(self.ship_coord_x[0]-1, self.ship_coord_x[0]+2):
-            for numb_y in range(self.ship_coord_y[0] - 1, self.ship_coord_y[0] + 2):
-                if 0 <= numb_x < 10 and 0 <= numb_y < 10:
-                    self.rows[numb_x][numb_y] = '.'
-        for numb_x in range(self.ship_coord_x[deck-1] - 1, self.ship_coord_x[deck-1] + 2):
-            for numb_y in range(self.ship_coord_y[deck-1] - 1, self.ship_coord_y[deck-1] + 2):
-                if 0 <= numb_x < 10 and 0 <= numb_y < 10:
-                    self.rows[numb_x][numb_y] = '.'
-        for numb in range(0, deck):
-            self.rows[self.ship_coord_x[numb]][self.ship_coord_y[numb]] = '0'
+            for numb_x in range(self.ship_coord_x[0]-1, self.ship_coord_x[0]+2):
+                for numb_y in range(self.ship_coord_y[0] - 1, self.ship_coord_y[0] + 2):
+                    if 0 <= numb_x < 10 and 0 <= numb_y < 10:
+                        self.rows[numb_x][numb_y] = '.'
+            for numb_x in range(self.ship_coord_x[deck-1] - 1, self.ship_coord_x[deck-1] + 2):
+                for numb_y in range(self.ship_coord_y[deck-1] - 1, self.ship_coord_y[deck-1] + 2):
+                    if 0 <= numb_x < 10 and 0 <= numb_y < 10:
+                        self.rows[numb_x][numb_y] = '.'
+            for numb in range(0, deck):
+                self.rows[self.ship_coord_x[numb]][self.ship_coord_y[numb]] = '0'
+        elif deck == 1:
+            for numb_x in range(self.ship_coord_x[0]-1, self.ship_coord_x[0]+2):
+                for numb_y in range(self.ship_coord_y[0] - 1, self.ship_coord_y[0] + 2):
+                    if 0 <= numb_x < 10 and 0 <= numb_y < 10:
+                        self.rows[numb_x][numb_y] = '.'
+            self.rows[self.ship_coord_x[0]][self.ship_coord_y[0]] = '0'
+        else:
+            print('Count of your deck is wrong!')
         self.print_board()
-
 
 
 def main():
@@ -123,6 +131,14 @@ def main():
     BoardUser.print_board()
     BoardUser.draw_ship(4)
     BoardUser.draw_ship(3)
+    BoardUser.draw_ship(3)
+    BoardUser.draw_ship(2)
+    BoardUser.draw_ship(2)
+    BoardUser.draw_ship(2)
+    BoardUser.draw_ship(1)
+    BoardUser.draw_ship(1)
+    BoardUser.draw_ship(1)
+    BoardUser.draw_ship(1)
 
 
 if __name__ == '__main__':
