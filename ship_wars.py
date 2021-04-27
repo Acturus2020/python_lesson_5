@@ -4,6 +4,7 @@ import random
 class Board:
     rows = None
     rows_opponent = None
+    rows_for_boom = None
     ship_x = 0
     ship_y = 0
     ship_coord_x = []
@@ -18,6 +19,7 @@ class Board:
     def __init__(self, row_count=10):
         self.rows = [[' ' for x in range(row_count)] for y in range(row_count)]
         self.rows_opponent = [[' ' for x in range(row_count)] for y in range(row_count)]
+        self.rows_for_boom = [[' ' for x in range(row_count)] for y in range(row_count)]
 
     def print_board(self):
         x_num = 1
@@ -28,6 +30,19 @@ class Board:
         print('')
         y_num = 1
         for row in self.rows:
+            print(y_num, end='')
+            print(row)
+            y_num += 1
+
+    def print_board_for_boom(self):
+        x_num = 1
+        print("x,y", end='')
+        for row in self.rows_for_boom:
+            print(x_num, "   ", end="")
+            x_num += 1
+        print('')
+        y_num = 1
+        for row in self.rows_for_boom:
             print(y_num, end='')
             print(row)
             y_num += 1
@@ -45,6 +60,30 @@ class Board:
             print(row)
             y_num += 1
 
+    def make_bum_bot(self):
+        while True:
+            bom_x = random.randrange(0, 10)
+            bom_y = random.randrange(0, 10)
+            if self.rows[bom_x][bom_y] == '*':
+                continue
+            break
+        if self.rows[bom_x][bom_y] == '0':
+            self.rows[bom_x][bom_y] = 'X'
+            print("Bot hit!")
+            self.print_board()
+            self.print_board_for_boom()
+            self.game_counter -= 1
+            if 0 > bom_x - 1 or self.rows[bom_x-1][bom_y] != '0':
+                if 0 > bom_y - 1 or self.rows[bom_x][bom_y-1] != '0':
+                    if 9 < bom_x + 1 or self.rows[bom_x+1][bom_y] != '0':
+                        if 9 < bom_y + 1 or self.rows[bom_x][bom_y+1] != '0':
+                            print('Bot drown Your ship!')
+        else:
+            print("Bot miss!")
+            self.rows[bom_x][bom_y] = '*'
+            self.print_board()
+            self.print_board_for_boom()
+
     def make_bum(self):
         bom_x = 0
         bom_y = 0
@@ -57,16 +96,18 @@ class Board:
                 continue
             bom_x = int(bom_x) - 1
             bom_y = int(bom_y) - 1
-            if not 0 <= bom_x < 10 and not 0 <= bom_y < 10:
+            if not 0 <= bom_x < 10 or not 0 <= bom_y < 10:
                 print('Please write coordinate between 1 and 10!')
                 continue
-            if self.rows[bom_x][bom_y] == '*':
+            if self.rows_opponent[bom_x][bom_y] == '*':
                 print('This cell was boomed in previously turn!')
                 continue
             break
-        if self.rows[bom_x][bom_y] == '0':
+        if self.rows_opponent[bom_x][bom_y] == '0':
+            self.rows_opponent[bom_x][bom_y] = 'X'
+            self.rows_for_boom[bom_x][bom_y] = 'X'
             print("You hit!")
-            self.game_counter -= 1
+            self.game_counter_opponent -= 1
             if 0 > bom_x - 1 or self.rows[bom_x-1][bom_y] != '0':
                 if 0 > bom_y - 1 or self.rows[bom_x][bom_y-1] != '0':
                     if 9 < bom_x + 1 or self.rows[bom_x+1][bom_y] != '0':
@@ -74,8 +115,8 @@ class Board:
                             print('You drown the ship!')
         else:
             print("You miss!")
-        self.rows[bom_x][bom_y] = '*'
-        self.print_board()
+            self.rows_opponent[bom_x][bom_y] = '*'
+            self.rows_for_boom[bom_x][bom_y] = '*'
 
     def write_coord(self):
         while True:
@@ -242,11 +283,11 @@ def main():
     BoardUser.draw_all_ships_random()
     BoardUser.print_board()
     BoardUser.draw_all_ships_random_bot()
-    BoardUser.print_board_bot()
-    # while BoardUser.game_counter > 0:
-    #     BoardUser.make_bum()
-    #
-    # raise SystemExit
+    BoardUser.print_board_for_boom()
+    while BoardUser.game_counter_opponent > 0 and BoardUser.game_counter > 0:
+        BoardUser.make_bum()
+        BoardUser.make_bum_bot()
+    raise SystemExit
 
 
 if __name__ == '__main__':
