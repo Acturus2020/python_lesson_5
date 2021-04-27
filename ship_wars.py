@@ -1,17 +1,23 @@
+import random
 
 
 class Board:
     rows = None
+    rows_opponent = None
     ship_x = 0
     ship_y = 0
     ship_coord_x = []
     ship_coord_y = []
-    game_counter = 20
+    game_counter = 0
+    game_counter_opponent = 0
+    rand_count = 0
+    random_method = False
 
     count = True
 
     def __init__(self, row_count=10):
         self.rows = [[' ' for x in range(row_count)] for y in range(row_count)]
+        self.rows_opponent = [[' ' for x in range(row_count)] for y in range(row_count)]
 
     def print_x_num(self):
         x_num = 1
@@ -77,52 +83,94 @@ class Board:
             if not self.rows[self.ship_x][self.ship_y] == ' ':
                 print('Please choose empty cell!')
                 continue
-            self.rows[self.ship_x][self.ship_y] = '0'
             break
 
+    def method_of_random_draw(self, deck):
+        self.ship_x = random.randrange(0, 10)
+        self.ship_y = random.randrange(0, 10)
+        if not self.rows[self.ship_x][self.ship_y] == ' ':
+            print('Please choose empty cell!')
+            return
+        self.draw_ship(deck)
+
+    def draw_all_ships_random(self):
+        self.random_method = True
+        while self.game_counter != 4:
+            self.method_of_random_draw(4)
+        while self.game_counter != 7:
+            self.method_of_random_draw(3)
+        while self.game_counter != 10:
+            self.method_of_random_draw(3)
+        while self.game_counter != 12:
+            self.method_of_random_draw(2)
+        while self.game_counter != 14:
+            self.method_of_random_draw(2)
+        while self.game_counter != 16:
+            self.method_of_random_draw(2)
+        while self.game_counter != 17:
+            self.method_of_random_draw(1)
+        while self.game_counter != 18:
+            self.method_of_random_draw(1)
+        while self.game_counter != 19:
+            self.method_of_random_draw(1)
+        while self.game_counter != 20:
+            self.method_of_random_draw(1)
+
     def draw_ship(self, deck):
+        input_choose_cord = '0'
         self.ship_coord_x = []
         self.ship_coord_y = []
+        if self.random_method:
+            self.rand_count = random.randrange(1, 5)
         print('Please draw', deck, 'deck ship:')
-        self.write_coord()
+        if not self.random_method:
+            self.write_coord()
         self.ship_coord_x.append(self.ship_x)
         self.ship_coord_y.append(self.ship_y)
+        self.rows[self.ship_x][self.ship_y] = '0'
         self.print_board()
         print('Choose rear of your', deck, '-deck ship:')
         if 1 < deck < 5:
             while True:
                 if self.ship_y - (deck-1) >= 0 and self.rows[self.ship_x][self.ship_y-(deck-1)] == ' ':
                     print('If you want', self.ship_x+1, ":", self.ship_y - (deck-2), 'coordinats for you ship, press 1, if no press 2')
-                    input_choose_cord = input()
-                    if int(input_choose_cord) == 1:
+                    if not self.random_method:
+                        input_choose_cord = input()
+                    if self.rand_count == 1 or int(input_choose_cord) == 1:
                         for numb in range(1, deck):
                             self.ship_coord_y.append(self.ship_y - numb)
                             self.ship_coord_x.append(self.ship_x)
                         break
-                if self.ship_y + (deck-1) < 10 and self.rows[self.ship_x][self.ship_y+(deck-1)] == ' ':
+                elif self.ship_y + (deck-1) < 10 and self.rows[self.ship_x][self.ship_y+(deck-1)] == ' ':
                     print('If you want', self.ship_x+1, ":", self.ship_y+deck, 'coordinats for you ship, press 1, if no press 2')
-                    input_choose_cord = input()
-                    if int(input_choose_cord) == 1:
+                    if not self.random_method:
+                        input_choose_cord = input()
+                    if self.rand_count == 2 or int(input_choose_cord) == 1:
                         for numb in range(1, deck):
                             self.ship_coord_y.append(self.ship_y + numb)
                             self.ship_coord_x.append(self.ship_x)
                         break
-                if self.ship_x - (deck-1) >= 0 and self.rows[self.ship_x-(deck-1)][self.ship_y] == ' ':
+                elif self.ship_x - (deck-1) >= 0 and self.rows[self.ship_x-(deck-1)][self.ship_y] == ' ':
                     print('If you want', self.ship_x-(deck-2), ":", self.ship_y+1, 'coordinats for you ship, press 1, if no press 2')
-                    input_choose_cord = input()
-                    if int(input_choose_cord) == 1:
+                    if not self.random_method:
+                        input_choose_cord = input()
+                    if int(input_choose_cord) == 1 or self.rand_count == 3:
                         for numb in range(1, deck):
                             self.ship_coord_x.append(self.ship_x - numb)
                             self.ship_coord_y.append(self.ship_y)
                         break
-                if self.ship_x + (deck-1) < 10 and self.rows[self.ship_x+(deck-1)][self.ship_y] == ' ':
+                elif self.ship_x + (deck-1) < 10 and self.rows[self.ship_x+(deck-1)][self.ship_y] == ' ':
                     print('If you want', self.ship_x+deck, ":", self.ship_y+1, 'coordinats for you ship, press 1, if no press 2')
-                    input_choose_cord = input()
-                    if int(input_choose_cord) == 1:
+                    if not self.random_method:
+                        input_choose_cord = input()
+                    if int(input_choose_cord) == 1 or self.rand_count == 4:
                         for numb in range(1, deck):
                             self.ship_coord_x.append(self.ship_x + numb)
                             self.ship_coord_y.append(self.ship_y)
                         break
+                print('Your input is wrong!')
+                if self.random_method:
+                    self.rand_count = random.randrange(1, 5)
 
             for numb_x in range(self.ship_coord_x[0]-1, self.ship_coord_x[0]+2):
                 for numb_y in range(self.ship_coord_y[0] - 1, self.ship_coord_y[0] + 2):
@@ -134,44 +182,27 @@ class Board:
                         self.rows[numb_x][numb_y] = '.'
             for numb in range(0, deck):
                 self.rows[self.ship_coord_x[numb]][self.ship_coord_y[numb]] = '0'
+            self.game_counter += deck
         elif deck == 1:
             for numb_x in range(self.ship_coord_x[0]-1, self.ship_coord_x[0]+2):
                 for numb_y in range(self.ship_coord_y[0] - 1, self.ship_coord_y[0] + 2):
                     if 0 <= numb_x < 10 and 0 <= numb_y < 10:
                         self.rows[numb_x][numb_y] = '.'
             self.rows[self.ship_coord_x[0]][self.ship_coord_y[0]] = '0'
+            self.game_counter += 1
         else:
             print('Count of your deck is wrong!')
         self.print_board()
 
 
 def main():
-    # user = Gamer(user=True)
-    # pc = Gamer(user=False)
-    # user.generate_board()
-    # pc.generate_board()
-    # game = Game(user, pc)
-    # game.run()
-    # while True:
-    #     game.step_user()
-    #     game.step_pc()
-    #     game.check_winner()
     BoardUser = Board()
-    # BoardUser.make_bum(1, 10)
+    BoardUser.draw_all_ships_random()
     BoardUser.print_board()
-    BoardUser.draw_ship(4)
-    BoardUser.draw_ship(3)
-    BoardUser.draw_ship(3)
-    BoardUser.draw_ship(2)
-    BoardUser.draw_ship(2)
-    BoardUser.draw_ship(2)
-    BoardUser.draw_ship(1)
-    BoardUser.draw_ship(1)
-    BoardUser.draw_ship(1)
-    BoardUser.draw_ship(1)
     while BoardUser.game_counter > 0:
         BoardUser.make_bum()
-    raise SystemExit
+    #
+    # raise SystemExit
 
 
 if __name__ == '__main__':
