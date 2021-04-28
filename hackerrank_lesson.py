@@ -1,14 +1,28 @@
-from collections import Counter
-
-n = int(input())
-list1 = []
-for word in range(0,n):
-    list1.append(input())
-temp = set(list1)
-count_unique = 0
-for i in temp:
-    count_unique += 1
-print(count_unique)
-a = dict(Counter(list1))
-for elem in a:
-    print(a[elem], end= ' ')
+n = 11
+m = 33
+dash = '-'
+symbol = '.|.'
+center_n = (n - 3) / 2
+center_m = (m - 3) / 2
+x = 0
+print(center_m)
+while center_m >= 1:
+    print(dash*int(center_m), end='')
+    print(symbol, end='')
+    print(symbol*x, end='')
+    print(dash*int(center_m))
+    center_m -= 3
+    x += 2
+welcome = (m - 3) / 2
+print((int(welcome)- 2)*dash , end='')
+print('WELCOME', end='')
+print((int(welcome)- 2)*dash)
+center_m += 3
+x -= 2
+while center_m <= welcome:
+    print(dash*int(center_m), end='')
+    print(symbol, end='')
+    print(symbol*x, end='')
+    print(dash*int(center_m))
+    center_m += 3
+    x -= 2
