@@ -18,6 +18,7 @@ class Board:
         self.rows = [[' ' for x in range(row_count)] for y in range(row_count)]
         self.rows_opponent = [[' ' for x in range(row_count)] for y in range(row_count)]
         self.rows_for_player_boom = [[' ' for x in range(row_count)] for y in range(row_count)]
+        self.rand_count = random.randrange(1, 5)
 
     def print_board(self):
         numb_for_x_board = 1
@@ -130,7 +131,7 @@ class Board:
                 print('Please write coordinate between 1 and 10!')
                 continue
             if not self.rows[self.ship_x_temp_coord][self.ship_y_temp_coord] == ' ':
-                print('Please choose empty cell!')
+                print('Please choose the empty cell!')
                 continue
             break
 
