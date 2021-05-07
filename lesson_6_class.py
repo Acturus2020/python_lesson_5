@@ -1,16 +1,29 @@
 # --lesson 6 class Mateush Vilen--
 
+import json
+
+
 class PersonalUserDatabase:
     user_dict = {}
 
     def __init__(self):
-        self.user_dict = {'one': 345345, 'two': 5675675, 'three': 5686786786786}
+        with open('data_file.json') as read_file:
+            self.user_dict = json.load(read_file)
+            read_file.close()
 
     def start_work(self):
         print('Your personal database is work, you have this base:')
         print(self.user_dict)
         self.input_command_value()
 
+    def my_decorator(func):
+        def wrapper():
+            print("-----------------------------")
+            func()
+            print('-----------------------------')
+        return wrapper()
+
+    @my_decorator
     def input_command_value(self):
         print('if you want add record press 1')
         print('if you wand delete record press 2')
@@ -43,6 +56,7 @@ class PersonalUserDatabase:
         if value1.isdigit():
             value1 = int(value1)
         self.user_dict.update({key1: value1})
+        self.write_to_file()
         self.start_work()
 
     def del_record(self):
@@ -58,6 +72,7 @@ class PersonalUserDatabase:
             self.start_work()
         user_list = list(self.user_dict)
         self.user_dict.pop(user_list[del_key - 1])
+        self.write_to_file()
         self.start_work()
 
     def edit_value(self):
@@ -76,6 +91,7 @@ class PersonalUserDatabase:
             value = int(value)
         user_list = list(self.user_dict)
         self.user_dict[user_list[reg_key - 1]] = value
+        self.write_to_file()
         self.start_work()
 
     def edit_key(self):
@@ -94,12 +110,19 @@ class PersonalUserDatabase:
             value = int(value)
         user_list = list(self.user_dict)
         self.user_dict[value] = self.user_dict.pop(user_list[reg_key - 1])
+        self.write_to_file()
         self.start_work()
+
+    def write_to_file(self):
+        with open("data_file.json", "w") as write_file:
+            write_file.write(json.dumps(self.user_dict, sort_keys=True, indent=4))
+            write_file.close()
 
 
 def main():
     new_user_dict = PersonalUserDatabase()
     new_user_dict.start_work()
+    # print(new_user_dict.user_dict)
 
 
 if __name__ == "__main__":
