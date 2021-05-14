@@ -1,4 +1,5 @@
 # --lesson 6 class Mateush Vilen--
+# PROBLEMS WITH DECORATOR
 
 import json
 
