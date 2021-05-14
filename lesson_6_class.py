@@ -3,6 +3,14 @@
 import json
 
 
+def my_decorator(func):
+    def wrapper():
+        print("-----------------------------")
+        func()
+        print('-----------------------------')
+    return wrapper()
+
+
 class PersonalUserDatabase:
     user_dict = {}
 
@@ -15,13 +23,6 @@ class PersonalUserDatabase:
         print('Your personal database is work, you have this base:')
         print(self.user_dict)
         self.input_command_value()
-
-    def my_decorator(func):
-        def wrapper():
-            print("-----------------------------")
-            func()
-            print('-----------------------------')
-        return wrapper()
 
     @my_decorator
     def input_command_value(self):
