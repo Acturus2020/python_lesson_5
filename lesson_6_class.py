@@ -1,15 +1,15 @@
 # --lesson 6 class Mateush Vilen--
-# PROBLEMS WITH DECORATOR
+#
 
 import json
 
 
 def my_decorator(func):
-    def wrapper():
+    def wrapper(self):
         print("-----------------------------")
-        func()
+        func(self)
         print('-----------------------------')
-    return wrapper()
+    return wrapper
 
 
 class PersonalUserDatabase:
@@ -23,10 +23,10 @@ class PersonalUserDatabase:
     def start_work(self):
         print('Your personal database is work, you have this base:')
         print(self.user_dict)
-        self.input_command_value()
+        self._input_command_value()
 
     @my_decorator
-    def input_command_value(self):
+    def _input_command_value(self):
         print('if you want add record press 1')
         print('if you wand delete record press 2')
         print('if you wand edit value press 3')
@@ -36,19 +36,19 @@ class PersonalUserDatabase:
         if not user_value.isdigit():
             print('ERROR Your input false, please write number!')
         if int(user_value) == 1:
-            self.add_record()
+            self._add_record()
         if int(user_value) == 2:
-            self.del_record()
+            self._del_record()
         if int(user_value) == 3:
-            self.edit_value()
+            self._edit_value()
         if int(user_value) == 4:
-            self.edit_key()
+            self._edit_key()
         if int(user_value) == 5:
             raise SystemExit
         else:
             print('ERROR Your input false, please white true number!')
 
-    def add_record(self):
+    def _add_record(self):
         print('Write key of record:')
         key1 = input()
         print('Write value for your key:')
@@ -61,7 +61,7 @@ class PersonalUserDatabase:
         self.write_to_file()
         self.start_work()
 
-    def del_record(self):
+    def _del_record(self):
         print(self.user_dict)
         print('What number of record you want to delete?')
         del_key = input()
@@ -77,7 +77,7 @@ class PersonalUserDatabase:
         self.write_to_file()
         self.start_work()
 
-    def edit_value(self):
+    def _edit_value(self):
         print('What number of value you want to change?')
         reg_key = input()
         if not reg_key.isdigit():
@@ -96,7 +96,7 @@ class PersonalUserDatabase:
         self.write_to_file()
         self.start_work()
 
-    def edit_key(self):
+    def _edit_key(self):
         print('What number of key you want to change?')
         reg_key = input()
         if not reg_key.isdigit():
@@ -117,7 +117,7 @@ class PersonalUserDatabase:
 
     def write_to_file(self):
         with open("data_file.json", "w") as write_file:
-            write_file.write(json.dumps(self.user_dict, sort_keys=True, indent=4))
+            write_file.write(json.dumps(self.user_dict, sort_keys=False, indent=4))
             write_file.close()
 
 
