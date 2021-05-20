@@ -3,7 +3,7 @@
 import sqlite3
 
 
-class PizzaDatabaseMixin:
+class PizzeriaDatabaseMixin:
     @staticmethod
     def __run_sql_command(command):
         conn = sqlite3.connect("Pizzeria_serializer.db")
@@ -17,35 +17,36 @@ class PizzaDatabaseMixin:
         self.name = name
 
     @staticmethod
-    def create_table_pizza():
+    def create_test_data_for_pizza():
+        test_data = []
+        test_data.append([1, 'Blood pizza', 123.25])
+        test_data.append([2, 'Homeless pizza', 1.01])
+        test_data.append([3, 'Pizza with people skin', 250.00])
+        test_data.append([4, 'Pizza for unicorns', 980.00])
         conn = sqlite3.connect("Pizzeria_serializer.db")
         cursor = conn.cursor()
         cursor.execute("CREATE TABLE PIZZA ( ID INTEGER PRIMARY KEY, NAME VARCHAR(50) NOT NULL, PRICE DECIMAL(5,2) NOT NULL );")
         conn.commit()
-        cursor.execute("INSERT INTO pizza VALUES (1, 'Blood pizza', 123.25);")
-        conn.commit()
-        cursor.execute("INSERT INTO pizza VALUES (2, 'Homeless pizza', 1.01);")
-        conn.commit()
-        cursor.execute("INSERT INTO pizza VALUES (3, 'Pizza with people skin', 250.00);")
-        conn.commit()
-        cursor.execute("INSERT INTO pizza VALUES (4, 'Pizza for unicorns', 980.00);")
-        conn.commit()
+        for test_write in test_data:
+            cursor.execute("INSERT INTO pizza VALUES (?, ?, ?);", (test_write[0], test_write[1], test_write[2]))
+            conn.commit()
         conn.close()
+        test_data.clear()
 
     @staticmethod
-    def create_table_user():
+    def create_test_data_for_user():
+        test_data = []
+        test_data.append([1, 'Michael Jackson', 'sky'])
+        test_data.append([2, 'John Travolta', 'Hollywood'])
+        test_data.append([3, 'Son of my mother friend', 'Best house in the world'])
+        test_data.append([4, 'Cockroach of my head', 'My head'])
         conn = sqlite3.connect("Pizzeria_serializer.db")
         cursor = conn.cursor()
-        cursor.execute("CREATE TABLE USER ( ID INTEGER PRIMARY KEY, NAME VARCHAR(50) NOT NULL, ADRESS VARCHAR(50) );")
+        cursor.execute("CREATE TABLE USER ( ID INTEGER PRIMARY KEY, NAME VARCHAR(50) NOT NULL, address VARCHAR(50) );")
         conn.commit()
-        cursor.execute("INSERT INTO user VALUES (1, 'Michael Jackson', 'sky');")
-        conn.commit()
-        cursor.execute("INSERT INTO user VALUES (2, 'John Travolta', 'Holywood');")
-        conn.commit()
-        cursor.execute("INSERT INTO user VALUES (3, 'Son of my mother friend', 'Best house in the world');")
-        conn.commit()
-        cursor.execute("INSERT INTO user VALUES (4, 'Cockroach of my head', 'My head');")
-        conn.commit()
+        for test_write in test_data:
+            cursor.execute("INSERT INTO user VALUES (?, ?, ?);", (test_write[0], test_write[1], test_write[2]))
+            conn.commit()
         conn.close()
 
     @staticmethod
@@ -57,7 +58,7 @@ class PizzaDatabaseMixin:
         conn.close()
 
     @staticmethod
-    def get_pizza_from_database():
+    def get_pizzas_from_database():
         conn = sqlite3.connect("Pizzeria_serializer.db")
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM pizza")
@@ -70,7 +71,7 @@ class PizzaDatabaseMixin:
         return pizzas
 
     @staticmethod
-    def get_user_from_database():
+    def get_users_from_database():
         conn = sqlite3.connect("Pizzeria_serializer.db")
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM user")
@@ -91,7 +92,7 @@ class PizzaDatabaseMixin:
         pass
 
 
-class Pizza(PizzaDatabaseMixin):
+class Pizza(PizzeriaDatabaseMixin):
     id = None
     name = ''
     price = 0.00
@@ -116,52 +117,58 @@ class Pizza(PizzaDatabaseMixin):
         return ['id', 'name', 'price']
 
 
-class User(PizzaDatabaseMixin):
+class User(PizzeriaDatabaseMixin):
     id = None
     name = ''
-    adress = ''
+    address = ''
 
-    def __init__(self, id, name, adress):
+    def __init__(self, id, name, address):
         self.id = id
         self.name = name
-        self.adress = adress
+        self.address = address
 
     def __getattr__(self, attr):
-        return self.adress()
+        return self.address()
 
     @property
     def bill_text(self):
-        return '{} {}'.format(self.name, self.adress)
+        return '{} {}'.format(self.name, self.address)
 
     def __str__(self):
         return 'User: {}'.format(self.name)
 
     @staticmethod
     def get_fields():
-        return ['id', 'name', 'adress']
+        return ['id', 'name', 'address']
 
-class Order(PizzaDatabaseMixin):
+
+class Order(PizzeriaDatabaseMixin):
     id = None
     name = ''
-    adress = ''
+    address = ''
 
-    def __init__(self, id, name, adress):
+    def __init__(self, id, name, address):
         self.id = id
         self.name = name
-        self.adress = adress
+        self.address = address
 
 
-# Pizza.create_table_pizza()
-# User.create_table_user()
-# Order.create_table_order()
-print('Users of my database:')
-users = User.get_user_from_database()
-for user in users:
-    print(user.name, ', adress for order:', user.adress)
-print('---------------------')
-print('Pizzas is enabled for order:')
-pizzas = Pizza.get_pizza_from_database()
-for pizza in pizzas:
-    # updated_name = pizza.name + " UPDATED"
-    # pizza.update_pizza_name(updated_name)
-    print(pizza.name, ', price:', pizza.price)
+def main():
+    Pizza.create_test_data_for_pizza()
+    User.create_test_data_for_user()
+    # Order.create_table_order()
+    print('Users of my database:')
+    users = User.get_users_from_database()
+    for user in users:
+        print(user.name, ', address for order:', user.address)
+    print('---------------------')
+    print('Pizzas is enabled for order:')
+    pizzas = Pizza.get_pizzas_from_database()
+    for pizza in pizzas:
+        # updated_name = pizza.name + " UPDATED"
+        # pizza.update_pizza_name(updated_name)
+        print(pizza.name, ', price:', pizza.price)
+
+
+if __name__ == '__main__':
+    main()
