@@ -147,52 +147,84 @@ class Board:
                 return
             self.game_counter_opponent = self.draw_ship(number_of_ship_deck, self.rows_opponent, self.game_counter_opponent)
 
-    def draw_all_ships_random_bot(self):
-        self.ships_draw_for_bot = True
-        self.rand_method_of_ships_create = True
-        while self.game_counter_opponent != 4:
-            self.method_of_random_draw(4)
-        while self.game_counter_opponent != 7:
-            self.method_of_random_draw(3)
-        while self.game_counter_opponent != 10:
-            self.method_of_random_draw(3)
-        while self.game_counter_opponent != 12:
-            self.method_of_random_draw(2)
-        while self.game_counter_opponent != 14:
-            self.method_of_random_draw(2)
-        while self.game_counter_opponent != 16:
-            self.method_of_random_draw(2)
-        while self.game_counter_opponent != 17:
-            self.method_of_random_draw(1)
-        while self.game_counter_opponent != 18:
-            self.method_of_random_draw(1)
-        while self.game_counter_opponent != 19:
-            self.method_of_random_draw(1)
-        while self.game_counter_opponent != 20:
-            self.method_of_random_draw(1)
 
-    def draw_all_ships_random(self):
+    def draw_all_ships_random(self, draw_bot=False):
+        self.ships_draw_for_bot = draw_bot
         self.rand_method_of_ships_create = True
-        while self.game_counter != 4:
-            self.method_of_random_draw(4)
-        while self.game_counter != 7:
-            self.method_of_random_draw(3)
-        while self.game_counter != 10:
-            self.method_of_random_draw(3)
-        while self.game_counter != 12:
-            self.method_of_random_draw(2)
-        while self.game_counter != 14:
-            self.method_of_random_draw(2)
-        while self.game_counter != 16:
-            self.method_of_random_draw(2)
-        while self.game_counter != 17:
-            self.method_of_random_draw(1)
-        while self.game_counter != 18:
-            self.method_of_random_draw(1)
-        while self.game_counter != 19:
-            self.method_of_random_draw(1)
-        while self.game_counter != 20:
-            self.method_of_random_draw(1)
+
+        if draw_bot:
+            while self.game_counter_opponent != 4:
+                self.method_of_random_draw(4)
+        else:
+            while self.game_counter != 4:
+                self.method_of_random_draw(4)
+
+        if draw_bot:
+            while self.game_counter_opponent != 7:
+                self.method_of_random_draw(3)
+        else:
+            while self.game_counter != 7:
+                self.method_of_random_draw(3)
+
+        if draw_bot:
+            while self.game_counter_opponent != 10:
+                self.method_of_random_draw(3)
+        else:
+            while self.game_counter != 10:
+                self.method_of_random_draw(3)
+
+        if draw_bot:
+            while self.game_counter_opponent != 12:
+                self.method_of_random_draw(2)
+        else:
+            while self.game_counter != 12:
+                self.method_of_random_draw(2)
+
+        if draw_bot:
+            while self.game_counter_opponent != 14:
+                self.method_of_random_draw(2)
+        else:
+            while self.game_counter != 14:
+                self.method_of_random_draw(2)
+
+        if draw_bot:
+            while self.game_counter_opponent != 16:
+                self.method_of_random_draw(2)
+        else:
+            while self.game_counter != 16:
+                self.method_of_random_draw(2)
+
+        if draw_bot:
+            while self.game_counter_opponent != 17:
+                self.method_of_random_draw(1)
+        else:
+            while self.game_counter != 17:
+                self.method_of_random_draw(1)
+
+        if draw_bot:
+            while self.game_counter_opponent != 18:
+                self.method_of_random_draw(1)
+        else:
+            while self.game_counter != 18:
+                self.method_of_random_draw(1)
+
+        if draw_bot:
+            while self.game_counter_opponent != 19:
+                self.method_of_random_draw(1)
+        else:
+            while self.game_counter != 19:
+                self.method_of_random_draw(1)
+
+        if draw_bot:
+            while self.game_counter_opponent != 20:
+                self.method_of_random_draw(1)
+        else:
+            while self.game_counter != 20:
+                self.method_of_random_draw(1)
+
+
+
+
 
     def draw_ship(self, number_of_ship_deck, rows, counter):
         read_cord_of_ship = '0'
@@ -281,7 +313,7 @@ def main():
     BoardUser = Board()
     BoardUser.draw_all_ships_random()
     BoardUser.print_board()
-    BoardUser.draw_all_ships_random_bot()
+    BoardUser.draw_all_ships_random(True)
     BoardUser.print_board_for_boom()
     while BoardUser.game_counter_opponent > 0 and BoardUser.game_counter > 0:
         BoardUser.make_bum()
