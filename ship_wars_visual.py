@@ -1,50 +1,112 @@
 import random
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QToolBar, QStatusBar, QGridLayout, QWidget, QPushButton
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget
 from PyQt5.QtCore import Qt
-# from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QFont, QPainter
 
 
-class MainWindow(QMainWindow):
-
+class MainWindow(QMainWindow, QWidget):
+    btn = [['btn'+str(x+1)+str(y+1) for x in range(10)] for y in range(10)]
     rows = None
+    rows_opponent = None
     rows_for_player_boom = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.setWindowTitle("Ship wars")
-        self.setFixedSize(500, 500)
-        # Создание метки для вывода текста
-        label = QLabel("Hello, World!")
-        label.setAlignment(Qt.AlignCenter)
-        self.setMenuWidget(label)
-        # Установка метки как центрального виджета окна
-        # self.setCentralWidget(label)
-        # Добавление панели инструментов
-        # toolbar = QToolBar("Main toolbar")
-        # self.addToolBar(toolbar)
-        # Добавление строки состояния
-        self.setStatusBar(QStatusBar(self))
+        self.setFixedSize(1000, 500)
 
+        # win = QWidget()
+        # win.setGeometry(50, 50, 200, 200)
+        # win.show()
+        # self.setCentralWidget(win)
 
-    def write_player_board(self, board):
-        win = QWidget()
+        # Матрица 3 на 3
+        # self._board_ships = [[None for _ in range(10)] for _ in range(10)]
 
-        grid = QGridLayout()
-        for i in range(0, 10):
-            for j in range(0, 10):
-                grid.addWidget(QPushButton(board[i][j]), i, j)
-        win.setLayout(grid)
-        win.setGeometry(50, 50, 200, 200)
-        win.show()
-        self.setCentralWidget(win)
+        self._size_cell = 40
 
-        button_action = QPushButton(self)
-        button_action.clicked(self.click_button_on_grid,True)
+        # # If True -- X else -- O
+        # self._ship_deck = False
+        # self._bomb = False
 
-    def click_button_on_grid(self):
-        print('click')
+    def mouseReleaseEvent(self, e):
+        # Определяем позицию клика
+        i = e.pos().y() // self._size_cell
+        j = e.pos().x() // self._size_cell
+
+        # Выход за пределы массива
+        if i >= 10 or j >= 10:
+            return
+        Board.make_bum(self, i, j)
+        self.rows_opponent[i][j] = '*' if True else ''
+        # self._current_figure_flag = not self._current_figure_flag
+
+        # Перерисовка, вызов paintEvent
+        self.update()
+
+    def paintEvent(self, e):
+        painter = QPainter(self)
+
+        painter.setPen(Qt.black)
+        painter.setBrush(Qt.white)
+
+        for i in range(len(self.rows_for_player_boom)):
+            row = self.rows_for_player_boom[i]
+
+            for j in range(len(row)):
+                x = j * self._size_cell
+                y = i * self._size_cell
+                w = self._size_cell
+                h = self._size_cell
+
+                painter.drawRect(x, y, w, h)
+
+                painter.save()
+                painter.setFont(QFont('Arial', 16))
+
+                value = self.rows_for_player_boom[i][j]
+                painter.setPen(Qt.blue if value == 'O' else Qt.red)
+
+                painter.drawText(x, y, w, h, Qt.AlignCenter, value)
+
+                painter.restore()
+
+        for i in range(len(self.rows)):
+            row = self.rows[i]
+
+            for j in range(len(row)):
+                x = j * self._size_cell
+                y = i * self._size_cell
+                w = self._size_cell
+                h = self._size_cell
+
+                painter.drawRect(x+500, y, w, h)
+
+                painter.save()
+                painter.setFont(QFont('Arial', 16))
+
+                value = self.rows[i][j]
+                painter.setPen(Qt.blue if value == 'O' else Qt.red)
+
+                painter.drawText(x+500, y, w, h, Qt.AlignCenter, value)
+
+                painter.restore()
+
+    # def write_player_board(self, board):
+    #     win = QWidget()
+    #
+    #     grid = QGridLayout()
+    #     for i in range(0, 10):
+    #         for j in range(0, 10):
+    #             self.btn[i][j] = QPushButton(board[i][j])
+    #             grid.addWidget(self.btn[i][j], i, j)
+    #
+    #     win.setLayout(grid)
+    #     win.setGeometry(50, 50, 200, 200)
+    #     win.show()
+    #     self.setCentralWidget(win)
 
 
 class Board:
@@ -129,25 +191,25 @@ class Board:
             self.print_board()
             self.print_board_for_boom()
 
-    def make_bum(self):
-        boom_x_temp_coord = 0
-        boom_y_temp_coord = 0
-        while True:
-            print('Please input boom coords x and y:')
-            boom_x_temp_coord = input('x')
-            boom_y_temp_coord = input('y')
-            if not boom_x_temp_coord.isdigit() or not boom_y_temp_coord.isdigit():
-                print('ERROR Your input false, please write number!')
-                continue
-            boom_x_temp_coord = int(boom_x_temp_coord) - 1
-            boom_y_temp_coord = int(boom_y_temp_coord) - 1
-            if not 0 <= boom_x_temp_coord < 10 or not 0 <= boom_y_temp_coord < 10:
-                print('Please write coordinate between 1 and 10!')
-                continue
-            if self.rows_opponent[boom_x_temp_coord][boom_y_temp_coord] == '*':
-                print('This cell was boomed in previously turn!')
-                continue
-            break
+    def make_bum(self, x, y):
+        boom_x_temp_coord = x
+        boom_y_temp_coord = y
+        # while True:
+        #     print('Please input boom coords x and y:')
+        #     boom_x_temp_coord = input('x')
+        #     boom_y_temp_coord = input('y')
+        #     if not boom_x_temp_coord.isdigit() or not boom_y_temp_coord.isdigit():
+        #         print('ERROR Your input false, please write number!')
+        #         continue
+        #     boom_x_temp_coord = int(boom_x_temp_coord) - 1
+        #     boom_y_temp_coord = int(boom_y_temp_coord) - 1
+        #     if not 0 <= boom_x_temp_coord < 10 or not 0 <= boom_y_temp_coord < 10:
+        #         print('Please write coordinate between 1 and 10!')
+        #         continue
+        #     if self.rows_opponent[boom_x_temp_coord][boom_y_temp_coord] == '*':
+        #         print('This cell was boomed in previously turn!')
+        #         continue
+        #     break
         if self.rows_opponent[boom_x_temp_coord][boom_y_temp_coord] == '0':
             self.rows_opponent[boom_x_temp_coord][boom_y_temp_coord] = 'X'
             self.rows_for_player_boom[boom_x_temp_coord][boom_y_temp_coord] = 'X'
@@ -158,6 +220,7 @@ class Board:
                     if 9 < boom_x_temp_coord + 1 or self.rows[boom_x_temp_coord+1][boom_y_temp_coord] != '0':
                         if 9 < boom_y_temp_coord + 1 or self.rows[boom_x_temp_coord][boom_y_temp_coord+1] != '0':
                             print('You drown the ship!')
+                            return
         else:
             print("You miss!")
             self.rows_opponent[boom_x_temp_coord][boom_y_temp_coord] = '*'
@@ -367,9 +430,10 @@ def main():
 
     # Создание окна приложения
     window = MainWindow()
-
     window.rows = BoardUser.rows
-    window.write_player_board(window.rows)
+    window.rows_opponent = BoardUser.rows_opponent
+    window.rows_for_player_boom = BoardUser.rows_for_player_boom
+    # window.write_player_board(window.rows)
     # window.rows_for_player_boom = BoardUser.rows_for_player_boom
     # window.write_player_board(window.rows_for_player_boom)
     window.show()  # Окна скрыты по умолчанию!
