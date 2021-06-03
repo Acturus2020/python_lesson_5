@@ -1,115 +1,12 @@
 import random
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QStatusBar, QLabel
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QPainter
 
 
-class MainWindow(QMainWindow, QWidget):
-    btn = [['btn'+str(x+1)+str(y+1) for x in range(10)] for y in range(10)]
-    rows = None
-    rows_opponent = None
-    rows_for_player_boom = None
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.setWindowTitle("Ship wars")
-        self.setFixedSize(1000, 500)
-
-        # win = QWidget()
-        # win.setGeometry(50, 50, 200, 200)
-        # win.show()
-        # self.setCentralWidget(win)
-
-        # Матрица 3 на 3
-        # self._board_ships = [[None for _ in range(10)] for _ in range(10)]
-
-        self._size_cell = 40
-
-        # # If True -- X else -- O
-        # self._ship_deck = False
-        # self._bomb = False
-
-    def mouseReleaseEvent(self, e):
-        # Определяем позицию клика
-        i = e.pos().y() // self._size_cell
-        j = e.pos().x() // self._size_cell
-
-        # Выход за пределы массива
-        if i >= 10 or j >= 10:
-            return
-        Board.make_bum(self, i, j)
-        self.rows_opponent[i][j] = '*' if True else ''
-        # self._current_figure_flag = not self._current_figure_flag
-
-        # Перерисовка, вызов paintEvent
-        self.update()
-
-    def paintEvent(self, e):
-        painter = QPainter(self)
-
-        painter.setPen(Qt.black)
-        painter.setBrush(Qt.white)
-
-        for i in range(len(self.rows_for_player_boom)):
-            row = self.rows_for_player_boom[i]
-
-            for j in range(len(row)):
-                x = j * self._size_cell
-                y = i * self._size_cell
-                w = self._size_cell
-                h = self._size_cell
-
-                painter.drawRect(x, y, w, h)
-
-                painter.save()
-                painter.setFont(QFont('Arial', 16))
-
-                value = self.rows_for_player_boom[i][j]
-                painter.setPen(Qt.blue if value == 'O' else Qt.red)
-
-                painter.drawText(x, y, w, h, Qt.AlignCenter, value)
-
-                painter.restore()
-
-        for i in range(len(self.rows)):
-            row = self.rows[i]
-
-            for j in range(len(row)):
-                x = j * self._size_cell
-                y = i * self._size_cell
-                w = self._size_cell
-                h = self._size_cell
-
-                painter.drawRect(x+500, y, w, h)
-
-                painter.save()
-                painter.setFont(QFont('Arial', 16))
-
-                value = self.rows[i][j]
-                painter.setPen(Qt.blue if value == 'O' else Qt.red)
-
-                painter.drawText(x+500, y, w, h, Qt.AlignCenter, value)
-
-                painter.restore()
-
-    # def write_player_board(self, board):
-    #     win = QWidget()
-    #
-    #     grid = QGridLayout()
-    #     for i in range(0, 10):
-    #         for j in range(0, 10):
-    #             self.btn[i][j] = QPushButton(board[i][j])
-    #             grid.addWidget(self.btn[i][j], i, j)
-    #
-    #     win.setLayout(grid)
-    #     win.setGeometry(50, 50, 200, 200)
-    #     win.show()
-    #     self.setCentralWidget(win)
-
-
 class Board:
+    message = ''
     rows = None
     rows_opponent = None
     rows_for_player_boom = None
@@ -128,45 +25,6 @@ class Board:
         self.rows_for_player_boom = [[' ' for x in range(row_count)] for y in range(row_count)]
         self.rand_count = random.randrange(1, 5)
 
-    def print_board(self):
-        numb_for_x_board = 1
-        print("x,y", end='')
-        for row in self.rows:
-            print(numb_for_x_board, "   ", end="")
-            numb_for_x_board += 1
-        print('')
-        numb_for_y_board = 1
-        for row in self.rows:
-            print(numb_for_y_board, end='')
-            print(row)
-            numb_for_y_board += 1
-
-    def print_board_for_boom(self):
-        numb_for_x_board = 1
-        print("x,y", end='')
-        for row in self.rows_for_player_boom:
-            print(numb_for_x_board, "   ", end="")
-            numb_for_x_board += 1
-        print('')
-        numb_for_y_board = 1
-        for row in self.rows_for_player_boom:
-            print(numb_for_y_board, end='')
-            print(row)
-            numb_for_y_board += 1
-
-    def print_board_bot(self):
-        numb_for_x_board = 1
-        print("x,y", end='')
-        for row in self.rows_opponent:
-            print(numb_for_x_board, "   ", end="")
-            numb_for_x_board += 1
-        print('')
-        numb_for_y_board = 1
-        for row in self.rows_opponent:
-            print(numb_for_y_board, end='')
-            print(row)
-            numb_for_y_board += 1
-
     def make_bum_bot(self):
         while True:
             boom_x_temp_coord = random.randrange(0, 10)
@@ -176,73 +34,38 @@ class Board:
             break
         if self.rows[boom_x_temp_coord][boom_y_temp_coord] == '0':
             self.rows[boom_x_temp_coord][boom_y_temp_coord] = 'X'
-            print("Bot hit!")
-            self.print_board()
-            self.print_board_for_boom()
+            self.message += ", bot hit!"
             self.game_counter -= 1
             if 0 > boom_x_temp_coord - 1 or self.rows[boom_x_temp_coord-1][boom_y_temp_coord] != '0':
                 if 0 > boom_y_temp_coord - 1 or self.rows[boom_x_temp_coord][boom_y_temp_coord-1] != '0':
                     if 9 < boom_x_temp_coord + 1 or self.rows[boom_x_temp_coord+1][boom_y_temp_coord] != '0':
                         if 9 < boom_y_temp_coord + 1 or self.rows[boom_x_temp_coord][boom_y_temp_coord+1] != '0':
-                            print('Bot drown Your ship!')
+                            self.message += 'Bot drown Your ship!'
         else:
-            print("Bot miss!")
+            self.message +=", bot miss!"
             self.rows[boom_x_temp_coord][boom_y_temp_coord] = '*'
-            self.print_board()
-            self.print_board_for_boom()
 
     def make_bum(self, x, y):
         boom_x_temp_coord = x
         boom_y_temp_coord = y
-        # while True:
-        #     print('Please input boom coords x and y:')
-        #     boom_x_temp_coord = input('x')
-        #     boom_y_temp_coord = input('y')
-        #     if not boom_x_temp_coord.isdigit() or not boom_y_temp_coord.isdigit():
-        #         print('ERROR Your input false, please write number!')
-        #         continue
-        #     boom_x_temp_coord = int(boom_x_temp_coord) - 1
-        #     boom_y_temp_coord = int(boom_y_temp_coord) - 1
-        #     if not 0 <= boom_x_temp_coord < 10 or not 0 <= boom_y_temp_coord < 10:
-        #         print('Please write coordinate between 1 and 10!')
-        #         continue
-        #     if self.rows_opponent[boom_x_temp_coord][boom_y_temp_coord] == '*':
-        #         print('This cell was boomed in previously turn!')
-        #         continue
-        #     break
         if self.rows_opponent[boom_x_temp_coord][boom_y_temp_coord] == '0':
             self.rows_opponent[boom_x_temp_coord][boom_y_temp_coord] = 'X'
             self.rows_for_player_boom[boom_x_temp_coord][boom_y_temp_coord] = 'X'
-            print("You hit!")
+            self.message = "You hit!"
             self.game_counter_opponent -= 1
             if 0 > boom_x_temp_coord - 1 or self.rows[boom_x_temp_coord-1][boom_y_temp_coord] != '0':
                 if 0 > boom_y_temp_coord - 1 or self.rows[boom_x_temp_coord][boom_y_temp_coord-1] != '0':
                     if 9 < boom_x_temp_coord + 1 or self.rows[boom_x_temp_coord+1][boom_y_temp_coord] != '0':
                         if 9 < boom_y_temp_coord + 1 or self.rows[boom_x_temp_coord][boom_y_temp_coord+1] != '0':
-                            print('You drown the ship!')
+                            self.message = 'You drown the ship!'
                             return
+        elif self.rows_opponent[boom_x_temp_coord][boom_y_temp_coord] == 'X':
+            self.message = "You was shooting for this cell!"
         else:
-            print("You miss!")
+            self.message = "You miss!"
             self.rows_opponent[boom_x_temp_coord][boom_y_temp_coord] = '*'
             self.rows_for_player_boom[boom_x_temp_coord][boom_y_temp_coord] = '*'
 
-    def write_coord(self):
-        while True:
-            print('Please input front coordinate x and y of first number_of_ship_deck:')
-            self.ship_x_temp_coord = input('x')
-            self.ship_y_temp_coord = input('y')
-            if not self.ship_x_temp_coord.isdigit() or not self.ship_y_temp_coord.isdigit():
-                print('ERROR Your input false, please write number!')
-                continue
-            self.ship_x_temp_coord = int(self.ship_x_temp_coord) - 1
-            self.ship_y_temp_coord = int(self.ship_y_temp_coord) - 1
-            if not 0 <= self.ship_x_temp_coord < 10 or not 0 <= self.ship_y_temp_coord < 10:
-                print('Please write coordinate between 1 and 10!')
-                continue
-            if not self.rows[self.ship_x_temp_coord][self.ship_y_temp_coord] == ' ':
-                print('Please choose the empty cell!')
-                continue
-            break
 
     def method_of_random_draw(self, number_of_ship_deck):
         self.ship_x_temp_coord = random.randrange(0, 10)
@@ -256,83 +79,69 @@ class Board:
                 return
             self.game_counter_opponent = self.draw_ship(number_of_ship_deck, self.rows_opponent, self.game_counter_opponent)
 
-
     def draw_all_ships_random(self, draw_bot=False):
         self.ships_draw_for_bot = draw_bot
         self.rand_method_of_ships_create = True
-
         if draw_bot:
             while self.game_counter_opponent != 4:
                 self.method_of_random_draw(4)
         else:
             while self.game_counter != 4:
                 self.method_of_random_draw(4)
-
         if draw_bot:
             while self.game_counter_opponent != 7:
                 self.method_of_random_draw(3)
         else:
             while self.game_counter != 7:
                 self.method_of_random_draw(3)
-
         if draw_bot:
             while self.game_counter_opponent != 10:
                 self.method_of_random_draw(3)
         else:
             while self.game_counter != 10:
                 self.method_of_random_draw(3)
-
         if draw_bot:
             while self.game_counter_opponent != 12:
                 self.method_of_random_draw(2)
         else:
             while self.game_counter != 12:
                 self.method_of_random_draw(2)
-
         if draw_bot:
             while self.game_counter_opponent != 14:
                 self.method_of_random_draw(2)
         else:
             while self.game_counter != 14:
                 self.method_of_random_draw(2)
-
         if draw_bot:
             while self.game_counter_opponent != 16:
                 self.method_of_random_draw(2)
         else:
             while self.game_counter != 16:
                 self.method_of_random_draw(2)
-
         if draw_bot:
             while self.game_counter_opponent != 17:
                 self.method_of_random_draw(1)
         else:
             while self.game_counter != 17:
                 self.method_of_random_draw(1)
-
         if draw_bot:
             while self.game_counter_opponent != 18:
                 self.method_of_random_draw(1)
         else:
             while self.game_counter != 18:
                 self.method_of_random_draw(1)
-
         if draw_bot:
             while self.game_counter_opponent != 19:
                 self.method_of_random_draw(1)
         else:
             while self.game_counter != 19:
                 self.method_of_random_draw(1)
-
         if draw_bot:
             while self.game_counter_opponent != 20:
                 self.method_of_random_draw(1)
         else:
             while self.game_counter != 20:
                 self.method_of_random_draw(1)
-
-
-
 
 
     def draw_ship(self, number_of_ship_deck, rows, counter):
@@ -343,7 +152,6 @@ class Board:
             self.rand_count = random.randrange(1, 5)
         else:
             print('Please draw', number_of_ship_deck, 'number_of_ship_deck ship:')
-            self.write_coord()
             print('Choose rear of your', number_of_ship_deck, '-number_of_ship_deck ship:')
         self.ship_x_temp_coord_list.append(self.ship_x_temp_coord)
         self.ship_y_temp_coord_list.append(self.ship_y_temp_coord)
@@ -418,35 +226,111 @@ class Board:
         return counter
 
 
+class MainWindow(QMainWindow, QWidget):
+
+    def __init__(self, Board_object, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.Board_object = Board_object
+        self.setWindowTitle("Ship wars")
+        self.setFixedSize(851, 550)
+
+        self.setStatusBar(QStatusBar(self))
+        self.setStatusTip("Shot bomb!")
+
+        self._size_cell = 40
+
+    def mouseReleaseEvent(self, e):
+        # Определяем позицию клика
+        i = e.pos().y() // self._size_cell
+        j = e.pos().x() // self._size_cell
+
+        # Выход за пределы массива
+        if i >= 10 or j >= 10:
+            return
+        self.Board_object.make_bum(i, j)
+        if self.Board_object.rows_opponent[i][j] == '' or self.Board_object.rows_opponent[i][j] == '.' or self.Board_object.rows_opponent[i][j] == 'O':
+            self.Board_object.rows_opponent[i][j] = '*'
+        self.Board_object.make_bum_bot()
+
+        self.setStatusTip(self.Board_object.message)
+        # label.setText(str(self.Board_object.game_counter) + 'vs' + str(self.Board_object.game_counter_opponent))
+
+        self.update()
+
+    def paintEvent(self, e):
+        if self.Board_object.game_counter == 0:
+            label = QLabel("YOU LOOSE!")
+            label.setAlignment(Qt.AlignCenter)
+            self.setCentralWidget(label)
+            return
+        if self.Board_object.game_counter_opponent == 0:
+            label = QLabel("YOU WIN!")
+            label.setAlignment(Qt.AlignCenter)
+            self.setCentralWidget(label)
+            return
+
+        painter = QPainter(self)
+
+        painter.setPen(Qt.black)
+        painter.setBrush(Qt.white)
+
+        for i in range(len(self.Board_object.rows_for_player_boom)):
+            row = self.Board_object.rows_for_player_boom[i]
+
+            for j in range(len(row)):
+                x = j * self._size_cell
+                y = i * self._size_cell
+                w = self._size_cell
+                h = self._size_cell
+
+                painter.drawRect(x, y, w, h)
+
+                painter.save()
+                painter.setFont(QFont('Arial', 16))
+
+                value = self.Board_object.rows_for_player_boom[i][j]
+                painter.setPen(Qt.blue if value == 'O' else Qt.red)
+
+                painter.drawText(x, y, w, h, Qt.AlignCenter, value)
+
+                painter.restore()
+
+        for i in range(len(self.Board_object.rows)):
+            row = self.Board_object.rows[i]
+
+            for j in range(len(row)):
+                x = j * self._size_cell
+                y = i * self._size_cell
+                w = self._size_cell
+                h = self._size_cell
+
+                painter.drawRect(x+450, y, w, h)
+
+                painter.save()
+                painter.setFont(QFont('Arial', 16))
+
+                value = self.Board_object.rows[i][j]
+                painter.setPen(Qt.blue if value == 'O' else Qt.red)
+
+                painter.drawText(x+450, y, w, h, Qt.AlignCenter, value)
+
+                painter.restore()
+
+
 def main():
     # Создаем экземпляр QApplication и передаем параметры командной строки
     app = QApplication(sys.argv)
 
     BoardUser = Board()
     BoardUser.draw_all_ships_random()
-    BoardUser.print_board()
     BoardUser.draw_all_ships_random(True)
-    BoardUser.print_board_for_boom()
 
     # Создание окна приложения
-    window = MainWindow()
-    window.rows = BoardUser.rows
-    window.rows_opponent = BoardUser.rows_opponent
-    window.rows_for_player_boom = BoardUser.rows_for_player_boom
-    # window.write_player_board(window.rows)
-    # window.rows_for_player_boom = BoardUser.rows_for_player_boom
-    # window.write_player_board(window.rows_for_player_boom)
+    window = MainWindow(BoardUser)
+
     window.show()  # Окна скрыты по умолчанию!
     # Запуск цикла событий
     app.exec_()
-
-    # while BoardUser.game_counter_opponent > 0 and BoardUser.game_counter > 0:
-    #
-    #     BoardUser.make_bum()
-    #     BoardUser.make_bum_bot()
-    # raise SystemExit
-
-
 
 
 if __name__ == '__main__':
