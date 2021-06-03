@@ -159,7 +159,7 @@ class Board:
                 if self.ship_y_temp_coord - (number_of_ship_deck-1) >= 0 and rows[self.ship_x_temp_coord][self.ship_y_temp_coord-(number_of_ship_deck-1)] == ' ':
                     if not self.rand_method_of_ships_create:
                         print('If you want', self.ship_x_temp_coord + 1, ":", self.ship_y_temp_coord - (number_of_ship_deck - 2),
-                              'coordinats for you ship, press 1, if no press 2')
+                              'coords for you ship, press 1, if no press 2')
                         read_cord_of_ship = input()
                     if self.rand_count == 2 or int(read_cord_of_ship) == 1:
                         for numb in range(1, number_of_ship_deck):
@@ -169,7 +169,7 @@ class Board:
                 elif self.ship_y_temp_coord + (number_of_ship_deck-1) < 10 and rows[self.ship_x_temp_coord][self.ship_y_temp_coord+(number_of_ship_deck-1)] == ' ':
                     if not self.rand_method_of_ships_create:
                         print('If you want', self.ship_x_temp_coord + 1, ":", self.ship_y_temp_coord + number_of_ship_deck,
-                              'coordinats for you ship, press 1, if no press 2')
+                              'coords for you ship, press 1, if no press 2')
                         read_cord_of_ship = input()
                     if self.rand_count == 1 or int(read_cord_of_ship) == 1:
                         for numb in range(1, number_of_ship_deck):
@@ -179,7 +179,7 @@ class Board:
                 elif self.ship_x_temp_coord - (number_of_ship_deck-1) >= 0 and rows[self.ship_x_temp_coord-(number_of_ship_deck-1)][self.ship_y_temp_coord] == ' ':
                     if not self.rand_method_of_ships_create:
                         print('If you want', self.ship_x_temp_coord - (number_of_ship_deck - 2), ":", self.ship_y_temp_coord + 1,
-                              'coordinats for you ship, press 1, if no press 2')
+                              'coords for you ship, press 1, if no press 2')
                         read_cord_of_ship = input()
                     if self.rand_count == 4 or int(read_cord_of_ship) == 1:
                         for numb in range(1, number_of_ship_deck):
@@ -189,7 +189,7 @@ class Board:
                 elif self.ship_x_temp_coord + (number_of_ship_deck-1) < 10 and rows[self.ship_x_temp_coord+(number_of_ship_deck-1)][self.ship_y_temp_coord] == ' ':
                     if not self.rand_method_of_ships_create:
                         print('If you want', self.ship_x_temp_coord + number_of_ship_deck, ":", self.ship_y_temp_coord + 1,
-                              'coordinats for you ship, press 1, if no press 2')
+                              'coords for you ship, press 1, if no press 2')
                         read_cord_of_ship = input()
                     if self.rand_count == 3 or int(read_cord_of_ship) == 1:
                         for numb in range(1, number_of_ship_deck):
