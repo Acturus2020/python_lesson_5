@@ -42,7 +42,7 @@ class Board:
                         if 9 < boom_y_temp_coord + 1 or self.rows[boom_x_temp_coord][boom_y_temp_coord+1] != '0':
                             self.message += 'Bot drown Your ship!'
         else:
-            self.message +=", bot miss!"
+            self.message += ", bot miss!"
             self.rows[boom_x_temp_coord][boom_y_temp_coord] = '*'
 
     def make_bum(self, x, y):
@@ -65,7 +65,6 @@ class Board:
             self.message = "You miss!"
             self.rows_opponent[boom_x_temp_coord][boom_y_temp_coord] = '*'
             self.rows_for_player_boom[boom_x_temp_coord][boom_y_temp_coord] = '*'
-
 
     def method_of_random_draw(self, number_of_ship_deck):
         self.ship_x_temp_coord = random.randrange(0, 10)
@@ -142,7 +141,6 @@ class Board:
         else:
             while self.game_counter != 20:
                 self.method_of_random_draw(1)
-
 
     def draw_ship(self, number_of_ship_deck, rows, counter):
         read_cord_of_ship = '0'
